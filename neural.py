@@ -1,7 +1,7 @@
 import csv
 import random
 
-taxa_aprendizagem = 0.001
+taxa_aprendizagem = 0.01
 
 dataset = []
 with open('data.csv') as file:
