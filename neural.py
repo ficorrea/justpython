@@ -1,6 +1,7 @@
 import csv
 import random
 
+taxa_aprendizagem = 0.001
 
 dataset = []
 with open('data.csv') as file:
@@ -29,12 +30,11 @@ def treino_teste_split(dataset, porcentagem_teste):
 x_treino, x_teste, y_treino, y_teste = treino_teste_split(dataset, 80)
 
 
-def sinal(u):
+def _sinal(u):
     return 1 if u >= 0 else 0
 
 
-def ajuste(w, x, d, y):
-    taxa_aprendizagem = 0.001
+def _ajuste(w, x, d, y):
     return w + taxa_aprendizagem * (d - y) * x
 
 
@@ -47,14 +47,14 @@ def perceptron_fit(x, d):
         for i in range(len(x)):
             u = sum([w[0]*-1, w[1]*x[i][0], w[2]*x[i][1],
                      w[3]*x[i][2], w[4]*x[i][3], w[5]*x[i][4]])
-            y = sinal(u)
+            y = _sinal(u)
             if y != d[i]:
-                w[0] = ajuste(w[0], -1, d[i], y)
-                w[1] = ajuste(w[1], x[i][0], d[i], y)
-                w[2] = ajuste(w[2], x[i][1], d[i], y)
-                w[3] = ajuste(w[3], x[i][2], d[i], y)
-                w[4] = ajuste(w[4], x[i][3], d[i], y)
-                w[5] = ajuste(w[5], x[i][4], d[i], y)
+                w[0] = _ajuste(w[0], -1, d[i], y)
+                w[1] = _ajuste(w[1], x[i][0], d[i], y)
+                w[2] = _ajuste(w[2], x[i][1], d[i], y)
+                w[3] = _ajuste(w[3], x[i][2], d[i], y)
+                w[4] = _ajuste(w[4], x[i][3], d[i], y)
+                w[5] = _ajuste(w[5], x[i][4], d[i], y)
                 erro = True
         epoca += 1
         if erro is False or epoca == 1000:
@@ -75,7 +75,7 @@ def perceptron_predict(x_test, w_ajustado):
              w_ajustado[2]*x_test[i][1], w_ajustado[3]*x_test[i][2],
              w_ajustado[4]*x_test[i][3], w_ajustado[5]*x_test[i][4]]
         )
-        y_predict.append(sinal(predict))
+        y_predict.append(_sinal(predict))
     return y_predict
 
 
@@ -85,8 +85,8 @@ print('Y validado: {}'.format(y_validado))
 
 def acuracia(y_test, y_predict):
     total_acertos = 0
-    for i in range(len(y_test)):
-        if y_predict[i] == y_test[i]:
+    for teste, predito in zip(y_test, y_predict):
+        if teste == predito:
             total_acertos += 1
         else:
             pass
